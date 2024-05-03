@@ -2,6 +2,7 @@ import express from 'express'
 import morgan from 'morgan'
 import pkg from '../package.json'
 import cors from 'cors';
+import path from 'path'
 
 import { createRoles } from "./libs/inititalSetup";
 
@@ -22,7 +23,10 @@ app.use(cors({
 }));
 app.use(morgan('dev'));
 app.use(express.json());
-app.use(cookieParser())
+app.use(cookieParser());
+
+//Ruta para servir los archivos de imagen
+app.use('/api/uploads', express.static(path.join(__dirname, 'uploads')));
 app.get( '/', (req, res) => {
     res.json({
         name: app.get( 'pkg' ).name,

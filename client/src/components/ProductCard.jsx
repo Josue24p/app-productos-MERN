@@ -3,7 +3,7 @@ import { useProduct } from "../context/ProductsContext"
 
 
 function ProductCard({ product }) {
-
+  console.log(product.imgURL)
   const {deleteProduct}= useProduct()
 
   return (
@@ -24,8 +24,10 @@ function ProductCard({ product }) {
       </header>
       <h1 className="text-xl">{product.category}</h1>
       <h1 >{product.price}</h1>
-      <p >{product.imgURL}</p>
-      <p>{new Date(product.createdAt).toLocaleDateString()}</p>
+      {product.imgURL && (
+        <img src={`http://localhost:4000/api/uploads/${product.imgURL.split('\\').pop()}`} alt={product.name} className="w-full my-2"/>
+      )}
+      <p>Created at: {new Date(product.createdAt).toLocaleDateString()}</p>
     </div>
   )
 }

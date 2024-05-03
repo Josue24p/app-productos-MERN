@@ -26,8 +26,13 @@ export function ProductProvider({ children }) {
     }
 
     const createProduct = async (product) => {
-        const res = await createProductRequest(product)
+        try {
+            const res = await createProductRequest(product)
+        setProducts([...products, res.data]) //Actualizar el estado de productos
         console.log(res.data)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const deleteProduct = async (id) => {
