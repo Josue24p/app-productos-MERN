@@ -5,51 +5,56 @@ import { useEffect, useState } from 'react';
 
 function ProductsFormPage() {
 
-  const {register, handleSubmit, setValue, watch} = useForm()
+  const {register, handleSubmit, setValue, } = useForm()
   const { createProduct, getProduct, updateProduct }= useProduct();
   const navigate = useNavigate()
   const params = useParams()
-  const [imagePreview, setImagePreview] = useState(null);
-  const imageFile = watch('imgURL') //permite observar el archivo de imagen
+  const [imagePreview, setImagePreview] = useState('');
+  //const imageFile = watch('imgURL') //permite observar el archivo de imagen
 
-  useEffect(()=>{
+  /* useEffect(()=>{
     if(imageFile && imageFile.length > 0){
       const fileReader = new FileReader();
       fileReader.onload = () => {
         setImagePreview(fileReader.result);
       };
-      fileReader.readAsDataURL(imageFile[0]);
+      //fileReader.readAsDataURL(imageFile[0]);
     }
-  },[imageFile])
+  },[imageFile]) */
 
+  //usa el useEffect para poder cargar la función, cual va devolver todos los valores de cada producto según su id, para poder editar
   useEffect(()=>{
     async function loadProduct(){
       if(params.id){
         const product = await getProduct(params.id)
         console.log(product)
+        //setValue es para ver los valores
         setValue('name',product.name)
         setValue('category',product.category)
         setValue('price',product.price)
-        if (product.imgURL){
-          product.imgURL; // Asumiendo que `imgURL` es la URL de la imagen
+        setValue('imgURL',product.imgURL)
+        //si la imagen del producto está mostrará una visualización
+        if (product.imgURL) {
+          setImagePreview(product.imgURL); // Asumiendo que `imgURL` es la URL de la imagen
         }
       }
     }
     loadProduct()
   },[])
-
-  const handleFileChange = (event) =>{
-    setImagePreview(event.target.files[0])
+  //Al momento de cambiar la url y al guardar se guarda la imagen del Url ingresada
+  const handleFileChange = () =>{
+    setImagePreview(imagePreview)
+     //Registra el cambio en el campo 'imgURL'
   }
 
-  //realizaré nuevos cambios mediante FormData
+  //realizaré nuevos cambios mediante FormData para leer los valores
   const onSubmit = handleSubmit((data)=>{
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("category", data.category);
     formData.append( "price", data.price);
-    if (data.imgURL.length > 0){
-      formData.append('imgURL', data.imgURL[0]);
+    if (data.imgURL) {
+      formData.append('imgURL', data.imgURL); //Agregar el archivo de imagen al FormData
     }
    //si params id existe es porque estás creando sino editanto
     if(params.id){
@@ -73,18 +78,16 @@ function ProductsFormPage() {
         <input type="text" placeholder="category" 
           {...register('category')}
           className='w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2'
-          autoFocus
         />
         <input type="number" placeholder="price" 
           {...register('price')}
           className='w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2'
-          autoFocus
         />
-        <input type="file" onChange={handleFileChange} placeholder="imgURL" 
+        <input type="text" placeholder="imgURL" 
           {...register('imgURL')}
-          className='w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2'
-          autoFocus
+          className='w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2' onChange={handleFileChange} //Llama a la función de cambio de imagen
         />
+        {/* Al momento de editar un producto, mediante este código puedo ver la imagen de esa url debajo, si cambia la url se actualiza la imagen el la lista de productos */}
         {imagePreview && (
           <img src={imagePreview} alt='Preview' className='w-full my-2'/>
         )}

@@ -5,7 +5,7 @@ import ProductCard from '../components/ProductCard'
 function ProductsPage() {
   const { getProducts, products } = useProduct();
   //ejecutar apenas cargue el componente
-  //para que cargue las tareas
+  //para que cargue los productos
   useEffect(() => {
     getProducts();
   }, []);

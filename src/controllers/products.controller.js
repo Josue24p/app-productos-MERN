@@ -3,8 +3,8 @@ import Product from "../models/Product";
 export const createProduct = async (req, res) => {
 try {
     
-    const {name, category, price} = req.body;
-    const imgURL = req.file ? req.file.path : '';// Obtiene la ruta del archivo subido, si existe
+    const {name, category, price, imgURL} = req.body;
+    //const imgURL = req.file ? req.file.path : '';// Obtiene la ruta del archivo subido, si existe
     //console.log('ruta del archivo', imgURL) //ruta del archivo
     console.log(req.user.id)
 
@@ -47,17 +47,18 @@ export const getProductById = async (req, res) => {
 
 export const updateProductById = async (req, res) => {
     try {
-        const { name, category, price } = req.body;
+        const { name, category, price, imgURL } = req.body;
         const updateData = {
             name,
             category,
-            price
+            price,
+            imgURL
         };
 
         // Si hay un archivo nuevo, actualiza la ruta de la imagen
-        if (req.file) {
+        /* if (req.file) {
             updateData.imgURL = req.file.path;
-        }
+        } */
 
         const updateProduct = await Product.findByIdAndUpdate(req.params.productId, updateData,{
             new : true

@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom"
 import { useProduct } from "../context/ProductsContext"
-
+import days from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+days.extend(utc)
 
 function ProductCard({ product }) {
-  console.log(product.imgURL)
+  //console.log(product)
   const {deleteProduct}= useProduct()
 
   return (
@@ -24,10 +26,12 @@ function ProductCard({ product }) {
       </header>
       <h1 className="text-xl">{product.category}</h1>
       <h1 >{product.price}</h1>
+      {/* Este código de abajo, me permite con el img, mostrar de cada producto su imagen respectivas */}
       {product.imgURL && (
-        <img src={`http://localhost:4000/api/uploads/${product.imgURL.split('\\').pop()}`} alt={product.name} className="w-full my-2"/>
+        <img src={product.imgURL} alt={product.name} className="w-full my-2"/>
       )}
-      <p>Created at: {new Date(product.createdAt).toLocaleDateString()}</p>
+      {/* para tener una fecha en formato dia, mes, año */}
+      <p>Created at: {days(product.createdAt).utc().format('DD/MM/YYYY')}</p>
     </div>
   )
 }

@@ -4,9 +4,10 @@ import path from 'path';
 //Otras librerías de validación Jimp, image-size, image-type
 
 //Destination: Similar al primer script, guarda los archivos en uploads/.
+//la carpeta uploads más que todo es para cuando quiero guardar en este caso si subo imagenes en type file poder guardar localmente en este caso en esa ruta
 const storage = multer.diskStorage({
     destination: (req, file, cb) => { //los 2 puntos para que sobresalga una carpeta arriba
-        cb(null, path.join(__dirname, '..', 'uploads/'))  // Asegúrate de que este directorio exista o que multer lo cree
+        cb(null, 'uploads/')  // Asegúrate de que este directorio exista o que multer lo cree
     },
     //Filename: Utiliza la fecha actual para crear un nombre único y mantiene la extensión original del archivo usando path.extname, lo cual es más sencillo y limpio que en el primer script.
     filename: (req, file, cb) => {
